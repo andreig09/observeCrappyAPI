@@ -36,6 +36,21 @@ services:
       - /dev/disk/:/dev/disk:ro
     privileged: true
 
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    command:
+      - '--web.listen-address=:9100'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
+
   crappy-api:
     container_name: "crappy-api"
     labels:
