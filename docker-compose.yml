@@ -61,3 +61,31 @@ services:
     image: "ghcr.io/fernandoescolar/crappy-api:latest"
     ports:
       - "5000:80/tcp"
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    depends_on:
+      - loki
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - ./simple-log-app:/usr/src/app
+
+  log-app:
+    image: simple-log-app:latest
+    container_name: log-app
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./simple-log-app:/usr/src/app
+      - /usr/src/app/node_modules
