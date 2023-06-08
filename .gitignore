@@ -1,3 +1,5 @@
+.DS_Store
 /simple-log-app/node_modules/
+/simple-log-app/.DS_Store
 /simple-log-app/application.log
 /simple-log-app/access.log
